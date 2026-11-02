@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>속지마켓 - 교내 안전 중고거래 & 분실물 센터</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#FFFBE5',
+                            100: '#FFF3A6',
+                            500: '#FFD600',
+                            600: '#FFD600',
+                            700: '#E6BE00',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="assets/styles.css?v=20261102-photo1">
+    <link rel="icon" type="image/svg+xml" href="assets/brand-logo.svg">
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <!-- 헤더 영역 -->
+    <header class="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm">
+        <div class="site-header-inner max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="location.hash='home'; resetFilters()">
+                <img class="brand-logo" src="assets/brand-logo.svg" alt="속지마켓 방패와 쇼핑백 로고" width="46" height="46">
+                <div>
+                    <h1 class="font-bold text-xl text-gray-900 leading-tight">속지마켓</h1>
+                    <p class="text-xs text-sky-600 font-medium" id="school-status-text">우리 학교 안심 거래</p>
+                </div>
+            </div>
+
+            <!-- 우측 제어 버튼 (채팅, 인증 정보, 글쓰기) -->
+            <div class="header-actions flex items-center space-x-2">
+                <a href="index.html#profile" id="wallet-header" class="header-wallet" hidden></a>
+                <!-- 내 채팅 목록 버튼 -->
+                <button data-member-link hidden aria-label="내 대화 목록" onclick="openChatListModal()" class="relative p-2 text-gray-600 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition-colors" title="내 대화 목록">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <span id="unread-chat-badge" class="hidden absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+                </button>
+
+                <!-- 실제 상단 메뉴 -->
+                <a href="index.html#report" class="header-link report-link">신고</a>
+                <a href="login.html" class="header-link" data-guest-link>로그인</a>
+                <a href="signup.html" class="header-link" data-guest-link>회원가입</a>
+                <a href="index.html#profile" class="header-link" data-member-link hidden>내 정보</a>
+
+                <!-- 글쓰기 버튼 -->
+                <button onclick="openPostModal()" class="flex items-center space-x-1 text-xs md:text-sm font-bold px-3.5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg shadow-sm transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>제품등록</span>
+                </button>
+            </div>
+        </div>
+    </header><div class="school-resume-notice" id="school-resume-notice" hidden role="status">학교인증이 아직 완료되지 않았습니다. <a href="auth.html">학교인증 이어하기 →</a></div><div class="wallet-banner" id="wallet-banner" hidden></div>
+
+
+<!-- 안전 직거래 알림 배너 -->
+    <div class="bg-gradient-to-r from-sky-500 to-indigo-600 text-white py-2 px-4 text-xs md:text-sm text-center font-medium shadow-inner">
+        <span>💡 안전 거래 안내: 모르는 외부인과의 거래 방지를 위해 교내 지정 안심존에서만 직거래하세요!</span>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <main id="page-home" data-page="home" class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <section class="market-carousel" aria-label="속지마켓 이용 안내" aria-roledescription="캐러셀">
+          <div class="market-slides">
+            <article class="market-slide slide-yellow" aria-label="1 / 3" aria-roledescription="슬라이드">
+              <div class="slide-copy"><p class="slide-eyebrow">우리 학교, 우리 사이</p><h2>안심하고 나누는<br>우리들의 속지마켓</h2><p>필요한 물건은 가까이에서, 거래는 서로 믿을 수 있게.</p></div>
+              <div class="slide-art" aria-hidden="true"><img src="assets/brand-logo.svg" alt="" width="150" height="150"><span class="art-tag">SOKJI MARKET</span></div>
+            </article>
+            <article class="market-slide slide-cream" aria-label="2 / 3" aria-roledescription="슬라이드" hidden>
+              <div class="slide-copy"><p class="slide-eyebrow">잠깐! 거래 전 확인해요</p><h2>물건은 직접 확인하고<br>약속은 꼼꼼하게</h2><p>상품 상태와 가격을 확인하고 교내 안심존에서 만나요.</p></div>
+              <div class="slide-art" aria-hidden="true"><span class="art-shield">✓</span><span class="art-tag">CHECK &amp; SAFE</span></div>
+            </article>
+            <article class="market-slide slide-peach" aria-label="3 / 3" aria-roledescription="슬라이드" hidden>
+              <div class="slide-copy"><p class="slide-eyebrow">쓰지 않는 물건의 다음 이야기</p><h2>내게는 안 쓰는 물건,<br>친구에게는 필요한 물건</h2><p>책부터 생활용품까지, 사진과 함께 제품을 등록해 보세요.</p><button type="button" class="slide-cta" onclick="openPostModal()">제품등록하기 →</button></div>
+              <div class="slide-art" aria-hidden="true"><span class="art-box">▣</span><span class="art-tag">PASS IT ON</span></div>
+            </article>
+          </div>
+          <div class="carousel-controls"><div class="carousel-dots" aria-label="배너 선택"><button type="button" data-slide="0" aria-label="1번 배너" aria-pressed="true"></button><button type="button" data-slide="1" aria-label="2번 배너" aria-pressed="false"></button><button type="button" data-slide="2" aria-label="3번 배너" aria-pressed="false"></button></div><div class="carousel-buttons"><button type="button" id="carousel-prev" aria-label="이전 배너">‹</button><span id="carousel-count" aria-live="off">1 / 3</span><button type="button" id="carousel-next" aria-label="다음 배너">›</button><button type="button" id="carousel-toggle" aria-label="자동재생 정지">Ⅱ</button></div></div>
+        </section>
+
+        <!-- 메인 탭 (중고거래 / 분실물 센터) -->
+        <div class="flex border-b border-gray-200 mb-6">
+            <button id="tab-market" onclick="switchTab('market')" class="flex-1 py-3 text-center font-bold text-base md:text-lg border-b-2 border-sky-600 text-sky-600 transition">
+                <span class="brand-tab-icon" aria-hidden="true">▣</span> 중고거래
+            </button>
+            <button id="tab-lost" onclick="switchTab('lost')" class="flex-1 py-3 text-center font-bold text-base md:text-lg border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition">
+                <span class="brand-tab-icon" aria-hidden="true">⌕</span> 분실물 센터
+            </button>
+        </div>
+
+        <!-- 검색 및 카테고리/정렬 필터 영역 -->
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-6 space-y-3">
+            <div class="flex flex-col md:flex-row gap-3">
+                <!-- 검색창 -->
+                <div class="relative flex-1">
+                    <input type="text" id="search-input" onkeyup="renderItems()" placeholder="물품명, 교재 이름, 위치 등으로 검색..." class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition">
+                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+
+                <!-- 정렬 선택 -->
+                <div class="flex items-center space-x-2">
+                    <select id="sort-select" onchange="renderItems()" class="py-2.5 px-3 bg-gray-50 border border-gray-200 rounded-xl text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500">
+                        <option value="latest">최신순</option>
+                        <option value="price-asc">낮은 가격순</option>
+                        <option value="price-desc">높은 가격순</option>
+                        <option value="free">무료나눔만 보기</option>
+                    </select>
+
+                    <!-- 찜한 상품만 보기 토글 버튼 -->
+                    <button id="favorite-filter-btn" onclick="toggleFavoriteFilter()" class="flex items-center space-x-1 px-3 py-2.5 bg-gray-50 hover:bg-rose-50 border border-gray-200 hover:border-rose-300 text-gray-600 hover:text-rose-500 rounded-xl text-xs md:text-sm font-semibold transition">
+                        <span id="fav-icon">🤍</span>
+                        <span>찜한 상품</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 세부 카테고리 칩 -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 hide-scrollbar text-xs md:text-sm" id="category-chips">
+                <!-- JS에서 카테고리 칩 동적 생성 -->
+            </div>
+        </div>
+
+        <!-- 게시글 목록 그리드 -->
+        <div id="item-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <!-- 동적 렌더링 영역 -->
+        </div>
+
+        <!-- 검색 결과 없음 상태 -->
+        <div id="empty-state" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-gray-200 my-4">
+            <div class="text-4xl mb-3">📦</div>
+            <h3 class="text-base font-bold text-gray-700">등록된 게시물이 없습니다.</h3>
+            <p class="text-xs text-gray-400 mt-1">첫 번째 물품을 등록하거나 필터를 해제해 보세요!</p>
+        </div>
+    </main>
+
+<!-- 학생 작업 영역: 각 data-page 구역이 하나의 페이지입니다. -->
+<section id="page-complete" data-page="complete" class="student-page" hidden><a class="back-link" href="index.html">← 마켓 홈</a><p class="eyebrow">SOKJI MARKET</p><h2>물건 확인 · 거래 완료</h2><p class="page-description">판매 조건과 물건을 확인한 뒤 구매자가 거래 완료를 확정합니다.</p><div id="completion-summary" class="form-card"></div><div id="payment-preview" class="form-card" hidden></div><div class="action-row"><button class="primary" id="complete-button">물건 확인 · 거래 완료</button><a class="secondary" href="agreement.html">약속서 작성</a><a class="secondary" id="view-receipt" href="receipt.html" hidden>안심 거래 확인증 보기</a></div><p id="completion-result" role="status"></p></section><section id="page-report" data-page="report" class="student-page" hidden><a class="back-link" href="index.html">← 마켓 홈</a><p class="eyebrow">SOKJI MARKET</p><h2>신고 접수</h2><p class="page-description">학교 내부 신고 화면의 시제품입니다. 내용을 이 브라우저에 저장한 뒤 경찰청 신고 사이트로 이동할 수 있습니다. 저장 내용은 자동 전송되지 않습니다.</p><div class="action-row"><a class="secondary" href="#history">내 신고 이력</a></div><form id="report-form" class="form-card"><label class="field" for="report-person">신고 대상 닉네임<input id="report-person" name="report-person" type="text" required ></label><label class="field" for="report-item">관련 상품명<input id="report-item" name="report-item" type="text" required ></label><label class="field" for="report-reason">신고 사유<select id="report-reason"><option>부적절한 게시물</option><option>거래 약속 불이행</option><option>가격·상품 정보 관련</option><option>기타</option></select></label><label class="field" for="report-description">상세 내용<textarea id="report-description" name="report-description" required rows="4"></textarea></label><button class="primary" type="submit">신고 내용 저장</button><p class="form-result" role="status" aria-live="polite"></p></form></section><section id="page-history" data-page="history" class="student-page" hidden><a class="back-link" href="index.html">← 마켓 홈</a><p class="eyebrow">SOKJI MARKET</p><h2>내 신고 이력</h2><p class="page-description">이 브라우저에서 작성한 체험 신고만 표시합니다. 사기 여부를 판정하거나 외부 이력을 조회하지 않습니다.</p><div id="police-report-actions" class="form-card" hidden><p>신고 내용이 이 브라우저에 저장되어 있습니다. 경찰청 사이트에서 직접 신고를 진행해 주세요.</p><div class="action-row"><a class="primary" href="https://ecrm.police.go.kr/minwon/main" target="_blank" rel="noopener noreferrer">경찰청 사기 피해 신고 바로가기 ↗</a></div><p class="school-help">경찰청 사이버범죄 신고시스템(ECRM)이 새 창으로 열립니다. 저장 내용은 자동 전송되지 않습니다.</p></div><div id="report-history" class="form-card"></div><a class="secondary" href="index.html#report">신고 작성</a></section><section id="page-profile" data-page="profile" class="student-page" hidden><a class="back-link" href="index.html">← 마켓 홈</a><p class="eyebrow">SOKJI MARKET</p><h2>내 정보</h2><p class="page-description">체험 정보와 이 브라우저의 거래 기록을 확인합니다.</p><div id="profile-summary" class="form-card"></div><div class="form-card"><h3 class="transaction-heading">내 판매 상품 · 거래 조건</h3><div id="seller-products"></div></div><div class="form-card"><h3 class="transaction-heading">내 체험 거래 내역</h3><p class="school-help">완료된 가상 잔액 거래 기록입니다.</p><div id="wallet-transactions"></div></div><button type="button" class="secondary" onclick="logoutLocal()">로그아웃</button><div class="action-row"><button class="primary" onclick="openAuthModal()">학교 정보 확인·수정</button><a class="secondary" href="#complete">거래 내역</a><a class="secondary" href="#history">내 신고 이력</a><button class="secondary" onclick="openChatListModal()">내 채팅 목록</button><a class="secondary" href="#awards">받은 상장</a></div></section><section id="page-awards" data-page="awards" class="student-page" hidden><a class="back-link" href="index.html">← 마켓 홈</a><p class="eyebrow">SOKJI MARKET</p><h2>상장 수여</h2><p class="page-description">거래 상대에게 줄 상장을 선택한 뒤 ‘선택한 상장 수여’를 눌러 주세요. 수여 기록은 이 브라우저에만 저장됩니다.</p><div class="action-row"><a class="secondary" href="index.html">건너뛰고 메인으로</a></div><div class="award-grid"><article class="form-card"><span class="award-icon">🤝</span><h3>매너상</h3><p>예의를 지키며 대화한 친구</p><span class="status-chip">미수여 · 화면 예시</span></article><article class="form-card"><span class="award-icon">☀️</span><h3>따뜻상</h3><p>친절하게 나누고 거래한 친구</p><span class="status-chip">미수여 · 화면 예시</span></article><article class="form-card"><span class="award-icon">⚡</span><h3>빨라상</h3><p>대화에 빠르게 응답한 친구</p><span class="status-chip">미수여 · 화면 예시</span></article><article class="form-card"><span class="award-icon">🔎</span><h3>꼼꼼상</h3><p>상품과 약속을 꼼꼼히 확인한 친구</p><span class="status-chip">미수여 · 화면 예시</span></article><article class="form-card"><span class="award-icon">🏆</span><h3>완벽상</h3><p>모든 평가 항목을 충족한 친구</p><span class="status-chip">미수여 · 화면 예시</span></article></div></section>
+
+<!-- 학교 인증 담당: 실제 검증 전, 입력 흐름만 확인하는 페이지 -->
+
+
+    <!-- 물품 상세 모달 -->
+    <div id="detail-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl relative flex flex-col">
+            <button onclick="closeDetailModal()" class="absolute top-3 right-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full p-2 z-10 transition">
+                ✕
+            </button>
+            <div class="p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <span id="detail-badge" class="px-2.5 py-1 text-xs font-bold rounded-full bg-sky-100 text-sky-700">중고거래</span>
+                    <span id="detail-time" class="text-xs text-gray-400">방금 전</span>
+                </div>
+
+                <p id="detail-photo-note" class="sample-photo-note" hidden>AI 생성 상품 예시 사진입니다. 실제 판매 물품 촬영본이 아닙니다.</p><div class="detail-photo-area"><img id="detail-photo" class="product-detail-photo" alt="상품 사진" hidden><div id="detail-photo-placeholder" class="product-photo-placeholder"><span aria-hidden="true">📷</span><small>등록된 사진이 없습니다</small></div></div>
+                <h2 id="detail-title" class="text-xl font-bold text-gray-900">물품 제목</h2>
+                <div id="detail-price" class="text-2xl font-extrabold text-sky-600">10,000원</div>
+
+                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 space-y-1 text-xs text-gray-600">
+                    <p>📍 <strong>희망 직거래 장소:</strong> <span id="detail-zone">본관 1층 로비</span></p>
+                    <p>👤 <strong>작성자:</strong> <span id="detail-author">홍길동 (학생)</span></p>
+                    <p>🏷️ <strong>카테고리:</strong> <span id="detail-category">기타</span></p>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 mb-1">상세 설명</h4>
+                    <p id="detail-desc" class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">상세 설명 내용이 입력됩니다.</p>
+                </div>
+
+                <div class="action-row"><button class="secondary" id="detail-agreement-btn" onclick="startAgreement()">거래 조건 확인</button><button class="secondary" onclick="startReport()">게시물 신고</button></div>
+                <!-- 하단 액션 버튼 그룹 -->
+                <div class="pt-4 flex items-center space-x-2">
+                    <button id="detail-chat-btn" onclick="" class="flex-1 py-3 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <span>1:1 대화하기</span>
+                    </button>
+                    <button id="detail-delete-btn" onclick="" class="py-3 px-3 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-xl border border-rose-200 transition text-sm">
+                        🗑️ 삭제
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1:1 채팅창 모달 -->
+    <div id="chat-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full h-[min(780px,94vh)] shadow-2xl flex flex-col overflow-hidden">
+            <!-- 채팅방 헤더 -->
+            <div class="p-4 bg-sky-600 text-white flex items-center justify-between shadow-sm">
+                <div>
+                    <h3 id="chat-partner-name" class="font-bold text-base">상대방 이름</h3>
+                    <p id="chat-item-title" class="text-xs text-sky-100 truncate max-w-[240px]">물품 제목</p>
+                </div>
+                <button onclick="closeChatModal()" class="text-white hover:bg-sky-700 p-1 rounded-lg transition">✕</button>
+            </div>
+
+            <!-- 안심 직거래 약속 빠른 제안 버튼 바 -->
+            <div class="bg-sky-50 px-3 py-2 border-b border-sky-100 flex items-center gap-1.5 overflow-x-auto hide-scrollbar text-xs">
+                <span class="font-bold text-sky-700 whitespace-nowrap">⚡ 빠른 약속:</span>
+                <button onclick="sendQuickMessage('오늘 쉬는 시간에 거래 가능할까요?')" class="px-2 py-1 bg-white hover:bg-sky-100 border border-sky-200 rounded-md text-sky-800 whitespace-nowrap transition">🕒 오늘 쉬는 시간</button>
+                <button onclick="sendQuickMessage('본관 1층 로비에서 만나요!')" class="px-2 py-1 bg-white hover:bg-sky-100 border border-sky-200 rounded-md text-sky-800 whitespace-nowrap transition">📍 본관 1층 로비</button>
+                <button onclick="sendQuickMessage('점심시간에 학생회실 앞에서 거래해요.')" class="px-2 py-1 bg-white hover:bg-sky-100 border border-sky-200 rounded-md text-sky-800 whitespace-nowrap transition">🍱 점심시간 직거래</button>
+            </div>
+
+            <!-- 메시지 대화 창 -->
+            <div id="chat-messages" class="flex-1 min-h-0 p-4 overflow-y-auto space-y-3 bg-gray-50 text-xs md:text-sm">
+                <!-- 메시지가 동적으로 삽입됨 -->
+            </div>
+
+            <aside id="chat-risk-panel" class="chat-risk-panel" data-level="0" aria-live="polite" aria-atomic="true"><strong id="chat-risk-title">채팅 위험 분석 준비 중</strong><p id="chat-risk-detail">최근 대화와 입력 내용을 확인합니다.</p><button id="chat-risk-report" type="button" hidden>신고 화면 열기 →</button><small>가상 데이터 학습 모델 · 사기 확정 아님 · 외부 전송 없음</small></aside>
+            <aside id="chat-price-panel" class="chat-risk-panel" data-level="0" aria-live="polite" aria-atomic="true">
+                <strong id="chat-price-title">가격 비교 준비 중</strong>
+                <p id="chat-price-summary">상품 가격과 공개 기준 가격을 비교합니다.</p>
+                <p id="chat-price-detail" class="price-model-detail"></p><a id="chat-price-source" target="_blank" rel="noopener noreferrer" hidden>가격 출처 확인 ↗</a><small>공식 새 제품 가격 참고 · 중고 시세나 사기 판정 아님</small>
+            </aside>
+
+            <details class="risk-demo-tools"><summary>채팅 경고 예시 넣기</summary><div><button type="button" data-risk-example="본관 로비에서 만나서 실물 확인 후 거래해요.">일반 거래</button><button type="button" data-risk-example="거래 전에 선입금 부탁드려요.">선입금 주의</button><button type="button" data-risk-example="카톡으로 와서 지금 바로 선입금하세요. 사진은 안 보냅니다.">강한 경고</button><button type="button" data-risk-example="선입금하지 마세요. 만나서 확인 후 거래해요.">예방 안내</button></div><p>입력창에 예시만 채우며 자동 전송하지 않습니다.</p></details>
+            <div class="chat-page-links"><button onclick="startAgreement()">거래 조건 확인 →</button></div>
+            <!-- 메시지 입력창 -->
+            <form onsubmit="handleSendMessage(event)" class="p-3 bg-white border-t border-gray-100 flex items-center space-x-2">
+                <input type="text" id="chat-input" placeholder="안전한 교내 대화를 입력하세요..." required class="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+                <button type="submit" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl text-xs md:text-sm transition">전송</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 내 대화 목록 (채팅방 목록) 모달 -->
+    <div id="chat-list-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full max-h-[80vh] shadow-2xl flex flex-col overflow-hidden">
+            <div class="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                <h3 class="font-bold text-gray-800 text-base flex items-center space-x-2">
+                    <span>💬 내 대화 목록</span>
+                </h3>
+                <button onclick="closeChatListModal()" class="text-gray-400 hover:text-gray-600 p-1">✕</button>
+            </div>
+
+            <div id="chat-room-container" class="flex-1 overflow-y-auto p-3 divide-y divide-gray-100">
+                <!-- 대화 목록 동적 로드 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/sample-catalog.js?v=20261102-photo1"></script><script src="assets/common.js?v=20261102-photo1"></script><script src="assets/trade-flow.js?v=20261102-photo1"></script>
+    <script src="assets/app.js?v=20261102-photo1"></script>
+    <script src="models/chat-risk-forest.js"></script>
+    <script src="assets/chat-risk-features.js"></script>
+    <script src="assets/text-risk.js"></script>
+    <script src="models/price-risk-model.js"></script>
+    <script src="assets/reference-catalog.js"></script>
+    <script src="assets/reference-prices.js"></script>
+    <script src="assets/price-risk.js"></script>
+    <script src="assets/chat-risk.js"></script>
+    <script src="assets/pages.js?v=20261102-photo1"></script>
+    <script src="assets/carousel.js"></script>
+</body>
+</html>
