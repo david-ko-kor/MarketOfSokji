@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>안심 거래 약속서 | 속지마켓</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#FFFBE5',
+                            100: '#FFF3A6',
+                            500: '#FFD600',
+                            600: '#FFD600',
+                            700: '#E6BE00',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="assets/styles.css?v=20261102-photo1">
+    <link rel="icon" type="image/svg+xml" href="assets/brand-logo.svg">
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col"><header class="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm">
+        <div class="site-header-inner max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="location.href='index.html'">
+                <img class="brand-logo" src="assets/brand-logo.svg" alt="속지마켓 방패와 쇼핑백 로고" width="46" height="46">
+                <div>
+                    <h1 class="font-bold text-xl text-gray-900 leading-tight">속지마켓</h1>
+                    <p class="text-xs text-sky-600 font-medium" id="school-status-text">우리 학교 안심 거래</p>
+                </div>
+            </div>
+
+            <!-- 우측 제어 버튼 (채팅, 인증 정보, 글쓰기) -->
+            <div class="header-actions flex items-center space-x-2">
+                <a href="index.html#profile" id="wallet-header" class="header-wallet" hidden></a>
+                <!-- 내 채팅 목록 버튼 -->
+                <button data-member-link hidden aria-label="내 대화 목록" onclick="openChatListModal()" class="relative p-2 text-gray-600 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition-colors" title="내 대화 목록">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <span id="unread-chat-badge" class="hidden absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+                </button>
+
+                <!-- 실제 상단 메뉴 -->
+                <a href="index.html#report" class="header-link report-link">신고</a>
+                <a href="login.html" class="header-link" data-guest-link>로그인</a>
+                <a href="signup.html" class="header-link" data-guest-link>회원가입</a>
+                <a href="index.html#profile" class="header-link" data-member-link hidden>내 정보</a>
+
+                <!-- 글쓰기 버튼 -->
+                <button onclick="openPostModal()" class="flex items-center space-x-1 text-xs md:text-sm font-bold px-3.5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg shadow-sm transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>제품등록</span>
+                </button>
+            </div>
+        </div>
+    </header><div class="school-resume-notice" id="school-resume-notice" hidden role="status">학교인증이 아직 완료되지 않았습니다. <a href="auth.html">학교인증 이어하기 →</a></div><div class="wallet-banner" id="wallet-banner" hidden></div><section id="page-agreement" data-page="agreement" class="student-page"><a class="back-link" href="index.html">← 마켓 홈</a><p class="eyebrow">SOKJI MARKET</p><a class="agreement-close" href="index.html" aria-label="약속서 닫기">✕</a><h2 id="agreement-heading">거래 조건 확인</h2><p id="agreement-description" class="page-description">판매자 조건 작성 → 구매자 확인·동의 → 물건 확인 후 거래 완료</p><div id="agreement-empty" class="form-card" role="status">거래 조건을 불러오는 중입니다. 이 안내가 계속 보이면 페이지를 새로고침해 주세요.</div><form id="agreement-form" class="form-card" hidden>
+<label class="field" for="deal-title">상품명<input id="deal-title" readonly></label>
+<label class="field" for="deal-price">금액 (원)<input id="deal-price" type="number" readonly></label>
+<label class="field" for="deal-partner">판매자<input id="deal-partner" readonly></label>
+<label class="field" for="deal-condition">상품 상태<input id="deal-condition" required maxlength="300"></label>
+<label class="field" for="deal-method">거래 방법<select id="deal-method"><option>교내 직거래</option><option>무료 나눔</option></select></label>
+<label class="field" for="deal-place">거래 장소<input id="deal-place" required maxlength="100"></label>
+<label class="field" for="deal-refund">환불 조건<textarea id="deal-refund" rows="3" required maxlength="1000"></textarea></label>
+<div id="buyer-schedule"><label class="field" for="deal-date">희망 거래 일시<input id="deal-date" type="datetime-local" required></label><p class="school-help">채팅에서 일정과 장소를 최종 확정해 주세요. 이 화면은 구매자의 요청을 저장하며 판매자의 일정 동의를 자동 처리하지 않습니다.</p><label class="check"><input id="deal-consent" type="checkbox" required> 판매자가 작성한 거래 조건을 확인하고 동의합니다.</label></div>
+<button id="agreement-submit" class="primary" type="submit">동의하고 거래 요청</button><p id="agreement-result" class="form-result" role="status" aria-live="polite"></p></form></section><script src="assets/sample-catalog.js?v=20261102-photo1"></script><script src="assets/common.js?v=20261102-photo1"></script><script src="assets/trade-flow.js?v=20261102-photo1"></script><script src="assets/agreement.js?v=20261102-photo1"></script></body></html>
