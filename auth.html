@@ -23,7 +23,7 @@
             }
         }
     </script>
-    <link rel="stylesheet" href="assets/styles.css?v=20261102-photo1">
+    <link rel="stylesheet" href="assets/styles.css?v=20261104-sold1">
     <link rel="icon" type="image/svg+xml" href="assets/brand-logo.svg">
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col">
@@ -73,7 +73,7 @@
 <label class="field" for="auth-number"><span id="school-number-label">학번</span><input id="auth-number" required placeholder="예: 1학년 2반 3번 (체험용)" autocomplete="off"></label>
 <fieldset class="ocr-card"><legend>학생증 이미지 확인</legend><p class="school-help">JPG·PNG·WebP, 10MB 이하. 사진은 이 브라우저에서만 처리하며 원본·인식 전문을 저장하거나 서버로 보내지 않습니다.</p><label class="field" for="student-card-file">학생증 사진 올리기<input id="student-card-file" type="file" accept="image/jpeg,image/png,image/webp"></label><img id="student-card-preview" class="student-card-preview" alt="선택한 학생증 미리보기" hidden><div class="action-row"><button id="run-student-ocr" type="button" class="secondary" disabled>학생증 확인하기</button><button id="use-ocr-sample" type="button" class="secondary">원주중학교 샘플로 테스트</button><button id="clear-student-card" type="button" class="secondary" hidden>사진 삭제</button></div><progress id="ocr-progress" max="100" value="0" hidden aria-label="학생증 문자 인식 진행률"></progress><p id="ocr-status" class="form-result" role="status" aria-live="polite">학생증 사진을 선택해 주세요.</p><div id="ocr-summary" hidden></div><p class="school-help">원주 중·고등학교 목록과 대조합니다. 불명확한 학교명은 직접 수정해 통과할 수 없으며 다시 촬영해야 합니다. 테스트용 문서는 로컬 시연으로만 처리됩니다.</p></fieldset><button type="submit" id="finish-school-auth" class="primary">학교명 확인 후 가입 완료</button><p id="school-auth-result" class="form-result" role="status" aria-live="polite">학교·학번을 입력하고 학생증 확인을 진행해 주세요.</p>
 </form></section>
-<script src="assets/sample-catalog.js?v=20261102-photo1"></script><script src="assets/common.js?v=20261102-photo1"></script><script src="assets/trade-flow.js?v=20261102-photo1"></script>
+<script src="assets/sample-catalog.js?v=20261104-sold1"></script><script src="assets/common.js?v=20261104-sold1"></script><script src="assets/trade-flow.js?v=20261104-sold1"></script>
 <script src="vendor/tesseract/tesseract.min.js"></script>
 <script src="vendor/tesseract/embedded-worker.js"></script>
 <script src="vendor/tesseract/embedded-kor.js"></script>

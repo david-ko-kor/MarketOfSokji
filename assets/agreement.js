@@ -13,6 +13,7 @@ function agreementUnavailable(message){
 }
 if(!userAuth?.id)agreementUnavailable('로그인 후 상품 상세에서 거래 조건을 확인해 주세요.');
 else if(!agreementItem)agreementUnavailable('메인에서 거래할 상품을 선택해 주세요.');
+else if(isItemSold(agreementItem))agreementUnavailable('이미 거래완료된 상품입니다. 상품 목록에서 다른 상품을 선택해 주세요.');
 else if(!agreementSeller&&!initialTerms)agreementUnavailable('판매자가 아직 거래 조건을 작성하지 않았습니다. 채팅에서 판매자에게 조건 작성을 요청해 주세요.');
 else{
  document.getElementById('agreement-empty').hidden=true;
@@ -35,6 +36,7 @@ agreementForm.addEventListener('submit',event=>{
  const account=readDemo('sm_userAuth',null),item=findAgreementItem(),value=id=>document.getElementById(id).value.trim();
  if(!account?.id||account.id!==userAuth?.id){agreementResult.textContent='로그인 계정이 변경되었습니다. 다시 로그인해 주세요.';return;}
  if(!item){agreementResult.textContent='상품이 삭제되었습니다. 메인에서 다시 확인해 주세요.';return;}
+ if(isItemSold(item)){agreementResult.textContent='이미 거래완료된 상품입니다.';return;}
  if(TradeFlow.signature(item)!==initialSignature){agreementResult.textContent='판매 정보가 변경되었습니다. 새로고침 후 다시 확인해 주세요.';return;}
  try{
   if(agreementSeller){

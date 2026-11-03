@@ -26,7 +26,7 @@ function refreshStudentPages() {
     : '<p>이 브라우저에서 작성한 체험 신고가 없습니다.</p>';
   document.getElementById('profile-summary').innerHTML = summary([['학교',userAuth?.school],['체험 이름',userAuth?.name],['내 체험 잔액',userAuth?.id?walletBalance(userAuth.id).toLocaleString()+'원':'로그인 필요'],['학교명 확인',userAuth?.ocrVerification?.status==='school_name_matched'?'OCR 학교명 일치 · 로컬 체험':'학교 정보에서 확인 필요'],['대화방',Object.keys(chats).length+'개 (로컬 시연)'],['거래 약속',deal?.title || '없음'],['거래 상태',deal?.completed ? '완료 기록 있음' : '완료 기록 없음']]);
   const ownGoods=readDemo('sm_items',[]).filter(item=>userAuth?.id&&item.ownerId===userAuth.id&&item.type==='market');
-  document.getElementById('seller-products').innerHTML=ownGoods.length?ownGoods.map(item=>'<div class="wallet-transaction"><strong>'+escapeHtml(item.title)+'</strong><a class="secondary" href="agreement.html?item='+encodeURIComponent(item.id)+'">판매 조건 작성·수정</a></div>').join(''):'<p class="school-help">등록한 중고거래 상품이 없습니다.</p>';
+  document.getElementById('seller-products').innerHTML=ownGoods.length?ownGoods.map(item=>'<div class="wallet-transaction"><strong>'+escapeHtml(item.title)+'</strong>'+(isItemSold(item)?'<span class="sold-inline">거래완료</span>':'<a class="secondary" href="agreement.html?item='+encodeURIComponent(item.id)+'">판매 조건 작성·수정</a>')+'</div>').join(''):'<p class="school-help">등록한 중고거래 상품이 없습니다.</p>';
   const transactions=walletState().transactions.filter(tx=>userAuth?.id&&(tx.buyerId===userAuth.id||tx.sellerId===userAuth.id)).slice().reverse();
   document.getElementById('wallet-transactions').innerHTML=transactions.length?transactions.map(tx=>{
    const buying=tx.buyerId===userAuth.id;
@@ -54,6 +54,7 @@ function closeFlowModals() {
 }
 function startAgreement() {
   const item=selectedProduct();
+  if(isItemSold(item)){alert('이미 거래완료된 상품입니다.');return;}
   if(item?.type!=='market'){alert('중고거래 상품을 선택해 주세요.');return;}
   location.href='agreement.html'+(item?'?item='+encodeURIComponent(item.id):'');
 }

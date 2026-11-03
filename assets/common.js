@@ -65,7 +65,7 @@ function settleVirtualTrade(deal){
  const state=walletState();
  const key=deal.dealId || JSON.stringify([deal.itemId,deal.title,deal.date,deal.partner,account.id]);
  const prior=state.transactions.find(tx=>tx.dealId===key);
- if(prior){if(prior.buyerId!==account.id)throw new Error('다른 계정의 거래입니다.');return prior;}
+ if(prior){if(prior.buyerId!==account.id)throw new Error('다른 계정의 거래입니다.');syncSoldItems();return prior;}
  const item=readDemo('sm_items',[]).find(item=>item.id===deal.itemId);
  TradeFlow.validate(deal,item,account.id);
  if(!deal.receiptConfirmed)throw new Error('물건과 거래 조건을 확인한 뒤 완료해 주세요.');
@@ -84,10 +84,31 @@ function settleVirtualTrade(deal){
  if(sellerId && !Number.isSafeInteger(balance(sellerId)+price))throw new Error('판매자 잔액 한도를 초과합니다.');
  setBalance(account.id,balance(account.id)-price);
  if(sellerId)setBalance(sellerId,balance(sellerId)+price);
- const tx={dealId:key,buyerId:account.id,sellerId:sellerId||null,price,title:deal.title,createdAt:new Date().toISOString(),balanceAfter:balance(account.id)};
+ const tx={dealId:key,itemId:deal.itemId,buyerId:account.id,sellerId:sellerId||null,price,title:deal.title,createdAt:new Date().toISOString(),balanceAfter:balance(account.id)};
  state.transactions.push(tx);
  localStorage.setItem('sm_virtual_wallet',JSON.stringify(state));
+ syncSoldItems();
  return tx;
 }
 
 function validProductPhoto(photo){return /^data:image\/(jpeg|png|webp);base64,/.test(photo||'')||/^assets\/sample-products\/(1|2|[4-9]|1[0-3])\.(svg|png)$/.test(photo||'');}
+
+// 지갑 거래 기록도 함께 확인하므로 상품 상태 저장 실패 후에도 재구매를 막습니다.
+function soldItemRecord(item){
+ if(!item||item.type!=='market')return null;
+ const tx=walletState().transactions.find(tx=>tx.itemId!=null&&tx.itemId===item.id);
+ if(tx)return {dealId:tx.dealId,completedAt:tx.createdAt};
+ const deal=readDemo('sm_demo_deal',null);
+ if(deal?.completed&&deal.itemId===item.id)return {dealId:deal.dealId,completedAt:deal.completedAt};
+ return item.status==='sold'?{dealId:item.soldDealId,completedAt:item.soldAt}:null;
+}
+function isItemSold(item){return Boolean(soldItemRecord(item));}
+function syncSoldItems(){
+ const goods=readDemo('sm_items',[]);let changed=false;
+ for(const item of goods){
+  const sold=soldItemRecord(item);
+  if(sold&&item.status!=='sold'){item.status='sold';item.soldAt=sold.completedAt||new Date().toISOString();item.soldDealId=sold.dealId||null;changed=true;}
+ }
+ if(changed){try{localStorage.setItem('sm_items',JSON.stringify(goods));}catch(error){console.warn('거래완료 표시는 거래 기록에서 복원합니다.',error);}}
+ return goods;
+}

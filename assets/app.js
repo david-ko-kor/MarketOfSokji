@@ -31,6 +31,8 @@ let selectedItemId = null;
           }
         }catch(error){console.warn('기본 상품을 저장하지 못했습니다.',error);}
 
+        items=syncSoldItems();
+
         // --- 앱 초기화 실행 ---
         window.onload = function() {
             updateAuthStatusUI();
@@ -164,10 +166,12 @@ let selectedItemId = null;
             emptyState.classList.add('hidden');
             grid.innerHTML = filtered.map(item => {
                 const isFav = favorites.includes(item.id);
+                const sold=isItemSold(item);
                 const priceDisplay = item.price === 0 ? '<span class="text-emerald-600 font-extrabold">무료나눔 🎁</span>' : `${item.price.toLocaleString()}원`;
 
                 return `
-                    <div onclick="openDetailModal(${item.id})" class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer relative flex flex-col justify-between group">
+                    <div onclick="openDetailModal(${item.id})" data-item-id="${item.id}" class="${sold?'sold-product-card ':''}bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer relative flex flex-col justify-between group">
+                        ${sold?'<span class="sold-product-badge">거래완료</span>':''}
                         <!-- 찜하기 버튼 -->
                         <button onclick="toggleFavorite(event, ${item.id})" class="absolute top-3 right-3 p-1.5 rounded-full bg-white/80 hover:bg-white shadow-sm border border-gray-100 z-10 transition">
                             <span class="text-base">${isFav ? '❤️' : '🤍'}</span>
@@ -349,7 +353,7 @@ let selectedItemId = null;
             const item = items.find(i => i.id === id);
             if (!item) return;
 
-            document.getElementById('detail-badge').innerText = item.type === 'market' ? '🛍️ 중고거래' : '🔍 분실물';
+            document.getElementById('detail-badge').innerText = isItemSold(item)?'거래완료':item.type === 'market' ? '🛍️ 중고거래' : '🔍 분실물';
             const photo=document.getElementById('detail-photo');
             const validPhoto=validProductPhoto(item.photo);
             photo.hidden=!validPhoto;
@@ -369,7 +373,7 @@ let selectedItemId = null;
             };
 
             const agreementButton=document.getElementById('detail-agreement-btn');
-            if(agreementButton){agreementButton.hidden=item.type!=='market';agreementButton.textContent=item.ownerId===userAuth?.id?'판매 조건 작성·수정':'거래 조건 확인';}
+            if(agreementButton){agreementButton.hidden=item.type!=='market';agreementButton.disabled=isItemSold(item);agreementButton.textContent=isItemSold(item)?'거래완료된 상품':item.ownerId===userAuth?.id?'판매 조건 작성·수정':'거래 조건 확인';}
             const deleteButton=document.getElementById('detail-delete-btn');
             deleteButton.hidden=Boolean(item.ownerId) && userAuth?.id!==item.ownerId;
             deleteButton.textContent=item.ownerId?'상품 삭제':'예시 상품 삭제';
@@ -409,3 +413,10 @@ let selectedItemId = null;
             alert('상품이 삭제되었습니다.');
         }
 
+
+window.addEventListener('storage',event=>{
+ if(['sm_items','sm_virtual_wallet','sm_demo_deal'].includes(event.key)){
+  items=syncSoldItems();renderItems();
+  if(selectedItemId&&!document.getElementById('detail-modal').classList.contains('hidden'))openDetailModal(selectedItemId);
+ }
+});

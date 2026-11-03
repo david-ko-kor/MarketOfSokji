@@ -10,6 +10,8 @@ window.TradeFlow={
  validate(deal,item,buyerId){
   if(!buyerId||deal.buyerId!==buyerId)throw new Error('약속서를 작성한 구매자 계정으로 로그인해 주세요.');
   if(!item||item.type!=='market')throw new Error('상품을 찾을 수 없습니다. 상품 목록에서 다시 확인해 주세요.');
+  const sold=soldItemRecord(item);
+  if(sold&&(!deal.dealId||sold.dealId!==deal.dealId))throw new Error('이미 거래완료된 상품입니다. 다른 상품을 선택해 주세요.');
   if(item.ownerId===buyerId)throw new Error('본인 상품은 구매할 수 없습니다.');
   if(deal.flowVersion!==2||!deal.buyerAccepted||!this.terms(item))throw new Error('상품 상세에서 판매 조건을 확인하고 다시 거래를 요청해 주세요.');
   if(deal.termsSignature!==this.signature(item)||Number(deal.price)!==Number(item.price))throw new Error('판매 조건이 변경되었습니다. 상품 상세에서 다시 확인·동의해 주세요.');
